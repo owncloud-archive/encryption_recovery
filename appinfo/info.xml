@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<info>
+	<id>encryption_recovery</id>
+	<description>
+		Forces the generation of encryption recovery keys on login
+	</description>
+	<name>Forced Recovery Keys</name>
+	<license>AGPL</license>
+	<author>Jörn Friedrich Dreyer</author>
+	<rememberlogin>false</rememberlogin>
+	<version>0.0.1</version>
+	<types>
+		<login/>
+	</types>
+	<dependencies>
+		<owncloud min-version="8.2" />
+	</dependencies>
+
+</info>
