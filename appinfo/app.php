@@ -28,7 +28,8 @@ $userSession->listen('\OC\User', 'postLogin', function (\OCP\IUser $user) {
         \OC::$server->getConfig()->setUserValue($user->getUID(), 'encryption_recovery', 'regenerate', time());
         $logger->debug('Regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
         $userSession = \OC::$server->getUserSession();
-        $crypt = new \OCA\Encryption\Crypto\Crypt($logger, $userSession, $config);
+        $l = \OC::$server->getL10N('encryption');
+        $crypt = new \OCA\Encryption\Crypto\Crypt($logger, $userSession, $config, $l);
         $view = new \OC\Files\View();
         $recovery = new \OCA\Encryption\Recovery (
             $userSession,

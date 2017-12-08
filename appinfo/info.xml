@@ -8,12 +8,11 @@
 	<license>AGPL</license>
 	<author>Jörn Friedrich Dreyer</author>
 	<rememberlogin>false</rememberlogin>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<types>
 		<login/>
 	</types>
 	<dependencies>
-		<owncloud min-version="8.2" />
+		<owncloud min-version="8.2" max-version="9.1"/>
 	</dependencies>
-
 </info>
