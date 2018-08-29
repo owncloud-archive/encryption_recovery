@@ -25,7 +25,6 @@ $userSession->listen('\OC\User', 'postLogin', function (\OCP\IUser $user) {
     $logger = \OC::$server->getLogger();
     $regenerateKeys = $config->getUserValue($user->getUID(), 'encryption_recovery', 'regenerate');
     if ($regenerateKeys === 'on') {
-        \OC::$server->getConfig()->setUserValue($user->getUID(), 'encryption_recovery', 'regenerate', time());
         $logger->debug('Regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
         $userSession = \OC::$server->getUserSession();
         $crypt = new \OCA\Encryption\Crypto\Crypt($logger, $userSession, $config);
@@ -58,6 +57,7 @@ $userSession->listen('\OC\User', 'postLogin', function (\OCP\IUser $user) {
         // remove script execution time limit
         set_time_limit(0);
         $recovery->setRecoveryForUser('1'); // sets config and regenerates recovery keys
+        \OC::$server->getConfig()->setUserValue($user->getUID(), 'encryption_recovery', 'regenerate', time());
         $logger->info('Regenerated recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
     } else {
         $logger->debug('Not regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
