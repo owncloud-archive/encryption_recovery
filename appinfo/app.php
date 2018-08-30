@@ -19,47 +19,9 @@
  *
  */
 
-$userSession = \OC::$server->getUserSession();
-$userSession->listen('\OC\User', 'postLogin', function (\OCP\IUser $user) {
-    $config = \OC::$server->getConfig();
-    $logger = \OC::$server->getLogger();
-    $regenerateKeys = $config->getUserValue($user->getUID(), 'encryption_recovery', 'regenerate');
-    if ($regenerateKeys === 'on') {
-        \OC::$server->getConfig()->setUserValue($user->getUID(), 'encryption_recovery', 'regenerate', time());
-        $logger->debug('Regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
-        $userSession = \OC::$server->getUserSession();
-        $crypt = new \OCA\Encryption\Crypto\Crypt($logger, $userSession, $config);
-        $view = new \OC\Files\View();
-        $recovery = new \OCA\Encryption\Recovery (
-            $userSession,
-            $crypt,
-            \OC::$server->getSecureRandom(),
-            new \OCA\Encryption\KeyManager(
-                \OC::$server->getEncryptionKeyStorage(),
-                $crypt,
-                $config,
-                $userSession,
-                new \OCA\Encryption\Session(\OC::$server->getSession()),
-                $logger,
-                new \OCA\Encryption\Util (
-                    $view,
-                    $crypt,
-                    $logger,
-                    $userSession,
-                    $config,
-                    \OC::$server->getUserManager()
-                )
-            ),
-            $config,
-            \OC::$server->getEncryptionKeyStorage(),
-            \OC::$server->getEncryptionFilesHelper(),
-            $view
-        );
-        // remove script execution time limit
-        set_time_limit(0);
-        $recovery->setRecoveryForUser('1'); // sets config and regenerates recovery keys
-        $logger->info('Regenerated recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
-    } else {
-        $logger->debug('Not regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
-    }
-});
+// Add the regen js to the files app which is loaded after login
+if (\OC::$server->getUserSession()->isLoggedIn()) {
+	\OC::$server->getEventDispatcher()->addListener('OCA\Files::loadAdditionalScripts', function() {
+		\OCP\Util::addScript('encryption_recovery', "regen");
+	});
+}
