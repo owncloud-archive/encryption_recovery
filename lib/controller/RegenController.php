@@ -29,6 +29,11 @@ class RegenController extends Controller {
 		$this->request = $request;
 	}
 
+	/**
+	 * @NoAdminRequired
+	 * @return JSONResponse
+	 * @throws \OCP\PreConditionNotMetException
+	 */
 	public function regen() {
 		$user = $this->userSession->getUser();
 		$regenerateKeys = $this->config->getUserValue(
@@ -36,11 +41,6 @@ class RegenController extends Controller {
 			'encryption_recovery',
 			'regenerate');
 		if ($regenerateKeys === 'on') {
-			$this->config->setUserValue(
-				$user->getUID(),
-				'encryption_recovery',
-				'regenerate',
-				time());
 			$this->logger->debug('Regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
 			$userSession = \OC::$server->getUserSession();
 			$crypt = new \OCA\Encryption\Crypto\Crypt($this->logger, $this->userSession, $this->config);
@@ -73,6 +73,11 @@ class RegenController extends Controller {
 			// remove script execution time limit
 			set_time_limit(0);
 			$recovery->setRecoveryForUser('1'); // sets config and regenerates recovery keys
+			$this->config->setUserValue(
+				$user->getUID(),
+				'encryption_recovery',
+				'regenerate',
+				time());
 			$this->logger->info('Regenerated recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
 		} else {
 			$this->logger->debug('Not regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
