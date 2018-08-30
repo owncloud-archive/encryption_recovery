@@ -3,6 +3,7 @@
 namespace OCA\Encryption_Recovery\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IConfig;
 use OCP\ILogger;
@@ -72,17 +73,23 @@ class RegenController extends Controller {
 			);
 			// remove script execution time limit
 			set_time_limit(0);
-			$recovery->setRecoveryForUser('1'); // sets config and regenerates recovery keys
+			try {
+				$recovery->setRecoveryForUser('1'); // sets config and regenerates recovery keys
+			} catch (\Exception $e) {
+				$this->logger->logException($e, ['app' => 'encryption_recovery']);
+				return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+			}
 			$this->config->setUserValue(
 				$user->getUID(),
 				'encryption_recovery',
 				'regenerate',
 				time());
 			$this->logger->info('Regenerated recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
+			return new JSONResponse();
 		} else {
 			$this->logger->debug('Not regenerating recovery keys for ' . $user->getUid(), ['app' => 'encryption_recovery']);
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
-		return new JSONResponse();
 	}
 
 }

@@ -8,6 +8,7 @@ class Application extends App {
 
 	public function __construct(array $urlParams=array()){
 		parent::__construct('encryption_recovery', $urlParams);
+
 	}
 
 }

@@ -19,7 +19,6 @@
  *
  */
 
-
 // Add the regen js to the files app which is loaded after login
 if (\OC::$server->getUserSession()->isLoggedIn()) {
 	\OC::$server->getEventDispatcher()->addListener('OCA\Files::loadAdditionalScripts', function() {
