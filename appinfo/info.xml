@@ -6,14 +6,13 @@
 	</description>
 	<name>Forced Recovery Keys</name>
 	<license>AGPL</license>
-	<author>Jörn Friedrich Dreyer</author>
+	<author>Jörn Friedrich Dreyer & Tom Needham</author>
 	<rememberlogin>false</rememberlogin>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<types>
 		<login/>
 	</types>
 	<dependencies>
 		<owncloud min-version="8.2" />
 	</dependencies>
-
 </info>
