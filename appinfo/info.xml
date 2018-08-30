@@ -6,7 +6,7 @@
 	</description>
 	<name>Forced Recovery Keys</name>
 	<license>AGPL</license>
-	<author>Jörn Friedrich Dreyer & Tom Needham</author>
+	<author>Jörn Friedrich Dreyer</author>
 	<rememberlogin>false</rememberlogin>
 	<version>0.0.2</version>
 	<types>
